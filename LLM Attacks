@@ -1,0 +1,49 @@
+**What is it LLM - Large languege model?**
+LLMs are AI algorithems that procced user input and createing plausible responses by predicting sequence of words.
+**Attacks target**
+- retrive data the llm has access to and user not
+- perform with the llm api harmful action such as SQLI 
+- trigger an attack on other user which using the llm
+
+**Prompt Injection**
+An Attacker uses crafted prompts to manipulate an LLM output.
+
+**Detecting LLM vulnerabilities methology** 
+- identify LLMs inputs such as prompts and training data inputs
+- understanding what api and data the llm has access to.
+- checking the surface for vulnerabilities
+
+**Genreral LLM API workflow**
+user prompt
+↓
+client calls the LLM with input
+↓
+LLM detect a api function is needed and returning a api json schema with arguments fit to the input he recived.
+for example for input what is the weather in TLV:
+{
+  "name": "getWeather",
+  "arguments": {
+    "city": "Tel Aviv",
+    "unit": "celsius"
+  }
+}
+↓
+client calls the function with the parameters made by the LLM and sends response back to LLM 
+↓ 
+LLM calls to external API with the response
+↓ 
+LLM summarizes the results and send back to user
+
+**Attacking API**
+The first stage of using an LLM to attack APIs and plugins is to work out which APIs and plugins the LLM has access to. One way to do this is to simply ask the LLM which APIs it can access. You can then ask for additional details on any APIs of interest.
+
+**Lab 01 - Exploiting LLM APIs with excessive agency**
+mission: using the LLM to delete the user carlos
+1. As We exploiting LLM lets find an AI chat - founded
+2. as told lets ask the LLM what api he can access
+3. we use the debug sql api to remove it from the db lets try this
+4. debug_sql(delete from users where username = 'carlos'); and solved!
+**Attack Chain**
+even if a LLM dont have access to danger API like in the lab u can use these API to find other vulnerability for example LLM can do a lfi aka Path traversal attack when api taking filename input.
+- After mapping the surface u may try get some common web vulnerabilities througth it.
+**Lab 02 Exploiting vulnerabilities in LLM APIs**
