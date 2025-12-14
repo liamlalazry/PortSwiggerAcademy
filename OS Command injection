@@ -1,0 +1,13 @@
+## What is OS command injection?
+Known also as shell injection letting an attacker to execute OS commands on the server that running the vuln application.
+for example:https://insecure-website.com/stockStatus?productID=381&storeID=29
+am application pasiing info througth URL then quering legacy systems to get the info then as the systems is old it calls a shell command with the ids as arguments abc.pl 381 29 in this case
+if a user will add an & echo abc & like  abc.pl & echo aiwefwlguh & 29 because its a simple shell it will execute it. and the output :
+Error - productID was not provided 
+aiwefwlguh 
+29: command not found
+-  the & after the command is to seperate the injected command from the rest to make sure what next wouldnt prevent the injection.
+### Lab 01 [OS command injection, simple case]
+so the web has 1 functionality of checking stock and it passes the data with the url as we saw earlier,so lets manipulate the url with & os command &.
+function 3 -> function & echo anc &
+so in the lab its using url so && needs encoding first and even then didnt work in addition the function is not the url exactly as there is no change in the url when changing the choice so i searched in the html for the real function and started post requests trying to get a valid response from the server then i used ; to cut the function in the middle and puttted ;whoami to finish the exercise.
